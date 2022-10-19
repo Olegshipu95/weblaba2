@@ -8,17 +8,27 @@ import jakarta.servlet.http.HttpFilter
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
-@WebFilter(servletNames = [AreaCheckServlet.nameOfServlet], dispatcherTypes = [DispatcherType.FORWARD, DispatcherType.REQUEST], filterName = AreaCheckFilter.NAME)
-class AreaCheckFilter : HttpFilter(){
-    companion object{
+@WebFilter(
+    servletNames = [AreaCheckServlet.nameOfServlet],
+    dispatcherTypes = [DispatcherType.FORWARD, DispatcherType.REQUEST],
+    filterName = AreaCheckFilter.NAME
+)
+class AreaCheckFilter : HttpFilter() {
+    companion object {
         const val NAME = "AreaCheckFilter"
     }
+
     override fun doFilter(request: HttpServletRequest, response: HttpServletResponse, chain: FilterChain) {
         try {
-            ValidationOfPoints.takeDoubleValue(request, "x")
-            ValidationOfPoints.takeDoubleValue(request, "y")
-            ValidationOfPoints.takeDoubleValue(request, "r")
-            servletContext.log("Filter $NAME")
+            servletContext.log("interception by $NAME")
+            val x = ValidationOfPoints.takeDoubleValue(request, "x")
+            val y = ValidationOfPoints.takeDoubleValue(request, "y")
+            val r = ValidationOfPoints.takeDoubleValue(request, "r")
+            val canvas = request.getParameter("canvas")
+            if (canvas.isNullOrEmpty()) {
+                ValidationOfPoints.checkDataFromForm(x, y, r)
+            }
+            servletContext.log("$NAME: Forward to $filterName")
             chain.doFilter(request, response);
         } catch (e: Exception) {
             response.sendError(400, e.message)

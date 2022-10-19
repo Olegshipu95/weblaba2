@@ -24,8 +24,7 @@ class ValidationOfPoints {
         }
 
         @Throws(NotCanvasException::class, IllegalArgumentException::class)
-        fun checkDataFromForm(fromCanvas: String?, x: Double, y: Double, r: Double) {
-            if (fromCanvas == null) throw NotCanvasException()
+        fun checkDataFromForm(x: Double, y: Double, r: Double) {
             checkXInBounds(x)
             checkYInBounds(y)
             checkRInBounds(r)

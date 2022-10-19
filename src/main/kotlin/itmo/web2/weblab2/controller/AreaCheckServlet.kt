@@ -24,10 +24,6 @@ class AreaCheckServlet : HttpServlet() {
             val x= takeDoubleValue(request, "x")
             val y = takeDoubleValue(request, "y")
             val r = takeDoubleValue(request, "r")
-
-            try {
-                checkDataFromForm(request.getParameter("canvas"),x,y,r)
-            } catch (_: NotCanvasException) {}
             val entry = checkTheShoot(x,y,r)
             val execTime = System.nanoTime() - start
             val message =
